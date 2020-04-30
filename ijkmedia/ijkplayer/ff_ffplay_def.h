@@ -198,9 +198,12 @@ typedef struct AudioParams {
     int bytes_per_sec;
 } AudioParams;
 
+/*
+ 时钟的定义: 其中pts表示video或者audio的时间戳，关键要理解pts_drift：pts_drift计算公式为pts - time，其中time为真实时间， 所以pts_drift代表了时间戳与真实时间的差别。当视频正常播放时，时间戳pts和真实时间time都是按相同速度在走的，所以pts_drift保持恒定；如果暂停，那时间戳pts就停止更新了，但是真实时间不会因为暂停操作就不停止，所以pts_drift就会变小。pts_drift + 当前time 可以得到当前正在播放的video的时间戳
+ */
 typedef struct Clock {
     double pts;           /* clock base */
-    double pts_drift;     /* clock base minus time at which we updated the clock */
+    double pts_drift;     /* clock base minus time at which we updated the clock  */
     double last_updated;
     double speed;
     int serial;           /* clock is based on a packet with this serial */
@@ -358,7 +361,7 @@ typedef struct VideoState {
     AVStream *subtitle_st;
     PacketQueue subtitleq;
 
-    double frame_timer;
+    double frame_timer;     //上一帧播放的时间(真实时间)
     double frame_last_returned_time;
     double frame_last_filter_delay;
     int video_stream;

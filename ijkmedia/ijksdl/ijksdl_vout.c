@@ -51,9 +51,11 @@ void SDL_VoutFreeP(SDL_Vout **pvout)
     *pvout = NULL;
 }
 
+//这个函数的上下文理解可以参考: https://blog.csdn.net/liuxiaoheng1992/article/details/80600954
 int SDL_VoutDisplayYUVOverlay(SDL_Vout *vout, SDL_VoutOverlay *overlay)
 {
     if (vout && overlay && vout->display_overlay)
+        //调用外部注册的函数
         return vout->display_overlay(vout, overlay);
 
     return -1;

@@ -75,6 +75,15 @@ void ffpipenode_free_p(IJKFF_Pipenode **node)
 
 int ffpipenode_run_sync(IJKFF_Pipenode *node)
 {
+    /*函数指针, 解耦各个平台 解码差异
+     node->func_run_sync(node)的node来源于ffp->node_vdec
+     
+     ffp->node_vdec来源于pipeline->func_open_video_decoder(pipeline, ffp)
+     
+     而pipeline来源于最开始init播放器的时候的_mediaPlayer = ijkmp_ios_create(media_player_msg_loop);安卓平台可能就不是这个函数了。也就是pipeline从播放器初始化的时候就不一样了，然后node就不同了，node的func_run_sync也跟着不同了。
+     iOS里面做了VideoToolbox和ffmpeg解码的区分。
+     。
+     */
     return node->func_run_sync(node);
 }
 
